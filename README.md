@@ -7,7 +7,7 @@ This repository contains the source code and a deployable zip file project.
     .
     ├── src                                # root directory ofthe project
     │	├── main                           # main folders
-    │   │    ├── api                       # api folders
+    │   │    ├── api                       # api folders and RAML file
     │   │    │   ├── examples              # contains example jsons
     │	│    │   └── schemas               # contains json schema
     │   │    ├── app                       # contains processFLows folder
