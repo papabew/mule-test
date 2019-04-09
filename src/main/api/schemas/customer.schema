@@ -1,0 +1,65 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/customer.json",
+  "type": "object",
+  "title": "The Customer Schema",
+  "required": [
+    "firstName",
+    "lastName",
+    "address"
+  ],
+  "properties": {
+    "firstName": {
+      "$id": "#/properties/firstName",
+      "type": "string",
+      "title": "The Firstname Schema",
+      "default": "",
+      "examples": [
+        "Vince"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "lastName": {
+      "$id": "#/properties/lastName",
+      "type": "string",
+      "title": "The Lastname Schema",
+      "default": "",
+      "examples": [
+        "Bernabe"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "address": {
+      "$id": "#/properties/address",
+      "type": "object",
+      "title": "The Address Schema",
+      "required": [
+        "address1",
+        "address2"
+      ],
+      "properties": {
+        "address1": {
+          "$id": "#/properties/address/properties/address1",
+          "type": "string",
+          "title": "The Address1 Schema",
+          "default": "",
+          "examples": [
+            "valenzuela"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "address2": {
+          "$id": "#/properties/address/properties/address2",
+          "type": "string",
+          "title": "The Address2 Schema",
+          "default": "",
+          "examples": [
+            "makati"
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "firstName": "Vince",
+    "lastName": "Bernabe",
+    "address": {
+      "address1": "valenzuela",
+      "address2": "makati"
+    }
+  },
+  {
+    "firstName": "John",
+    "lastName": "Bernabe",
+    "address": {
+      "address1": "valenzuela",
+      "address2": "makati"
+    }
+  }
+]

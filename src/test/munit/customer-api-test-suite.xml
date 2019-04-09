@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <munit:config mock-connectors="false" mock-inbounds="false" name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:customer-api.xml"/>
+        <spring:import resource="classpath:processFLows/add-customer.xml"/>
+        <spring:import resource="classpath:processFLows/delete-customer.xml"/>
+        <spring:import resource="classpath:processFLows/get-customers.xml"/>
+        <spring:import resource="classpath:processFLows/update-customer.xml"/>
+    </spring:beans>
+    <munit:test name="customer-api-test-suite-post:/customers:application/json:customer-api-configTest" description="Bad Request" >
+        <mock:throw-an exception-ref="#[new java.lang.Exception()]" whenCalling=".*:.*" doc:name="Throw an Exception">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['add-customer-flow']"/>
+            </mock:with-attributes>
+        </mock:throw-an>
+        <flow-ref name="post:/customers:application/json:customer-api-config" doc:name="Flow Reference"/>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == 'failed']" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-post:/customers:application/json:customer-api-configTest-positive" description="Bad Request" >
+        <flow-ref name="post:/customers:application/json:customer-api-config" doc:name="Flow Reference"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == &quot;Customer creation success.&quot;]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-get:/customers:customer-api-configTest" description="Test" >
+    	<mock:throw-an exception-ref="#[new java.lang.Exception()]" whenCalling=".*:.*" doc:name="Throw an Exception">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['get-customer-flow']"/>
+            </mock:with-attributes>
+        </mock:throw-an>
+        <flow-ref name="get:/customers:customer-api-config" doc:name="Flow-ref to get:/customers:customer-api-config"/>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == 'failed']" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-get:/customers:customer-api-configTest-positive" description="Test" >
+    	<flow-ref name="get:/customers:customer-api-config" doc:name="Flow Reference"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <munit:assert-true message="Assert Failed" condition="#[payload.size() != 0]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-delete:/customers/{customerId}:customer-api-configTest" description="Test" >
+    	<mock:throw-an exception-ref="#[new java.lang.Exception()]" whenCalling=".*:.*" doc:name="Throw an Exception">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['delete-customer-flow']"/>
+            </mock:with-attributes>
+        </mock:throw-an>
+        <flow-ref name="delete:/customers/{customerId}:customer-api-config" doc:name="Flow-ref to delete:/customers/{customerId}:customer-api-config"/>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == 'failed']" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-delete:/customers/{customerId}:customer-api-configTest-positive" description="Test" >
+        <flow-ref name="delete:/customers/{customerId}:customer-api-config" doc:name="Flow-ref to delete:/customers/{customerId}:customer-api-config"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == &quot;Customer deletion success.&quot;]" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-patch:/customers/{customerId}:customer-api-configTest" description="Test" >
+    	<mock:throw-an exception-ref="#[new java.lang.Exception()]" whenCalling=".*:.*" doc:name="Throw an Exception">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['update-customer-flow']"/>
+            </mock:with-attributes>
+        </mock:throw-an>
+        <flow-ref name="patch:/customers/{customerId}:customer-api-config" doc:name="Flow-ref to patch:/customers/{customerId}:customer-api-config"/>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == 'failed']" doc:name="Assert True"/>
+    </munit:test>
+    <munit:test name="customer-api-test-suite-patch:/customers/{customerId}:customer-api-configTest-positive" description="Test" >
+        <flow-ref name="patch:/customers/{customerId}:customer-api-config" doc:name="Flow-ref to patch:/customers/{customerId}:customer-api-config"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <munit:assert-true message="Assert Failed" condition="#[payload.message == &quot;Customer update success.&quot;]" doc:name="Assert True"/>
+    </munit:test>
+</mule>
